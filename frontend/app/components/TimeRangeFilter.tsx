@@ -1,13 +1,11 @@
 import { subHours, subDays } from 'date-fns';
 
-// Define the shape of a single time range option
 interface TimeRangeOption {
   label: string;
   start: Date;
   end: Date;
 }
 
-// Define the types for the component's props
 interface TimeRangeFilterProps {
   selectedRange: string;
   onTimeChange: (range: TimeRangeOption) => void;

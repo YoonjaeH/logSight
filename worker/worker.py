@@ -1,11 +1,9 @@
 import pika
 import psycopg2
 import json
-import os
 import time
 
 def main():
-    # --- Connect to RabbitMQ with retries ---
     connection = None
     for i in range(5):
         try:
@@ -20,12 +18,11 @@ def main():
     
     if not connection:
         print("Could not connect to RabbitMQ after multiple retries. Exiting.")
-        return # Exit if connection fails
+        return
 
     channel = connection.channel()
     channel.queue_declare(queue='logs', durable=True)
 
-    # --- Connect to TimescaleDB ---
     try:
         db_conn = psycopg2.connect(
             host="timescaledb",
@@ -37,14 +34,13 @@ def main():
         print("Successfully connected to TimescaleDB")
     except psycopg2.OperationalError as e:
         print(f"Could not connect to TimescaleDB. Exiting. ({e})")
-        return # Exit if DB connection fails
+        return
 
     def callback(ch, method, properties, body):
         try:
             message = json.loads(body)
             print(f" [x] Received {message}")
             
-            # Insert into database
             cursor.execute(
                 """
                 INSERT INTO events (time, project_id, event_type, data)
@@ -60,10 +56,7 @@ def main():
             ch.basic_ack(delivery_tag=method.delivery_tag)
         except Exception as e:
             print(f"Error processing message: {e}")
-            # Optionally, you can reject the message to requeue it
-            # ch.basic_nack(delivery_tag=method.delivery_tag)
 
-    # Set up the consumer
     channel.basic_consume(queue='logs', on_message_callback=callback)
 
     print(' [*] Waiting for messages. To exit press CTRL+C')

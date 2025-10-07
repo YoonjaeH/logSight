@@ -1,9 +1,7 @@
 import { format } from 'date-fns';
 
-// Define the shape of a single event (an array with specific types)
 type EventTuple = [string, string, object];
 
-// Define the props for the component
 interface EventsTableProps {
   events: EventTuple[];
 }

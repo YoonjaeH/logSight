@@ -1,20 +1,16 @@
 import { ResponsiveContainer, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line } from 'recharts';
 import { format } from 'date-fns';
 
-// Define the shape of a single data point
 interface ChartDataPoint {
   bucket: string;
   count: number;
-  // Add other properties if they exist
 }
 
-// Define the props for the component
 interface StatsChartProps {
   data: ChartDataPoint[];
 }
 
 export default function StatsChart({ data }: StatsChartProps) {
-  // Process data to be suitable for the chart
   const processedData = data.map(item => ({
     ...item,
     bucket: format(new Date(item.bucket), 'MMM d, HH:mm'),

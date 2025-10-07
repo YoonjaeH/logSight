@@ -1,0 +1,4 @@
+celery
+psycopg2-binary
+requests
+redis

@@ -1,8 +1,7 @@
 import { formatISO } from 'date-fns';
 
-const API_BASE_URL = 'http://localhost:8080/api'; // The URL of your backend API
+const API_BASE_URL = 'http://localhost:8080/api';
 
-// Function to fetch statistics
 export async function getStatsOverTime(projectId: string, startTime: Date, endTime: Date) {
   const params = new URLSearchParams({
     start_time: formatISO(startTime),
@@ -13,7 +12,6 @@ export async function getStatsOverTime(projectId: string, startTime: Date, endTi
   return response.json();
 }
 
-// Function to fetch recent events
 export async function getEvents(projectId: string, startTime: Date, endTime: Date) {
   const params = new URLSearchParams({
     start_time: formatISO(startTime),

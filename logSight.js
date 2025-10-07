@@ -1,15 +1,13 @@
 class logSight {
   constructor(projectId) {
     this.projectId = projectId;
-    this.ingestUrl = 'http://localhost:8000/ingest'; // Your ingestor URL
+    this.ingestUrl = 'http://localhost:8000/ingest';
   }
 
-  // A function to send custom events
   track(eventType, data) {
     this.send({ eventType, data });
   }
 
-  // Private send method
   send(payload) {
     const dataToSend = {
       projectId: this.projectId,
@@ -20,7 +18,6 @@ class logSight {
   }
 }
 
-// Global error handler
 window.onerror = function (message, source, lineno, colno, error) {
   logSight.send({
     eventType: 'error',
@@ -28,5 +25,4 @@ window.onerror = function (message, source, lineno, colno, error) {
   });
 };
 
-// Initialize for the user
 const logSight = new logSight('YOUR_PROJECT_ID');

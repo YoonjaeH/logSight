@@ -9,7 +9,6 @@ services:
       - "15672:15672"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq/
-    # ADDED HEALTHCHECK FOR RABBITMQ
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "ping"]
       interval: 30s
@@ -27,12 +26,14 @@ services:
       - "5432:5432"
     volumes:
       - timescaledb_data:/var/lib/postgresql/data
-    # ADDED HEALTHCHECK FOR TIMESCALEDB
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user -d mydb"]
       interval: 10s
       timeout: 5s
       retries: 5
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis
 
   ingestor:
     build:
@@ -72,6 +73,22 @@ services:
       - "3000:3000"
     depends_on:
       - api
+    # environment:
+    #   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: 
+    #   CLERK_SECRET_KEY: 
+
+  alerter:
+    build:
+      context: ./alerter
+    container_name: alerter
+    command: celery -A alerter.app beat -l info
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      timescaledb:
+        condition: service_healthy
+      redis:
+        condition: service_started
 
 volumes:
   rabbitmq_data:

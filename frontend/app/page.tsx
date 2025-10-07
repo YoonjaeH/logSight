@@ -8,7 +8,6 @@ import EventsTable from './components/EventsTable';
 import TimeRangeFilter from './components/TimeRangeFilter';
 import { UserButton } from "@clerk/nextjs";
 
-// Define interfaces for our data shapes
 interface TimeRange {
   label: string;
   start: Date;
@@ -26,7 +25,6 @@ export default function Dashboard() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch data whenever the time range changes
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
