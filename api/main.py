@@ -1,12 +1,18 @@
 from fastapi import FastAPI
 from datetime import datetime
 import psycopg2
+import os
 
 app = FastAPI()
 
 # Database connection
 def get_db_connection():
-    return psycopg2.connect(...)
+    return psycopg2.connect(
+        host=os.getenv("DB_HOST", "db"),
+        database=os.getenv("DB_NAME", "logsight"),
+        user=os.getenv("DB_USER", "postgres"),
+        password=os.getenv("DB_PASSWORD", "password")
+    )
 
 @app.get("/api/projects/{project_id}/events")
 def get_events(project_id: str, start_time: datetime, end_time: datetime):
